@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>もうこないからねー</title>
+    <style>
+        /* ページ全体のスタイル */
+        body {
+            background-color: white;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            transition: background-color 0.3s; /* 背景色のフェードイン設定 */
+        }
+
+        /* 画像のスタイル */
+        .random-image {
+            position: absolute;
+            max-width: 200px;
+            max-height: 200px;
+        }
+
+        /* プルダウンメニューのスタイル */
+        .dropdown {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            font-family: Arial, sans-serif;
+        }
+
+        .dropdown select {
+            padding: 8px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- プルダウンメニュー -->
+<div class="dropdown">
+    <select id="backgroundColorSelector">
+        <option value="white">White</option>
+        <option value="black">Black</option>
+        <option value="green">Green</option>
+    </select>
+</div>
+
+<script>
+    // 画像ファイル名リスト
+    const images = ["img/-.-.png", "img/angry.png", "img/normal.png", "img/fuck.png"];
+
+    // `sound=on`がURL末尾にあるかチェック
+    const urlParams = new URLSearchParams(window.location.search);
+    const soundEnabled = urlParams.has('sound') && urlParams.get('sound') === 'on';
+
+    // 音声ファイルの設定（ループ再生）
+    let audio;
+    if (soundEnabled) {
+        audio = new Audio("moukona.mp3");
+        audio.loop = true;
+        audio.play();
+    }
+
+    // ページクリックイベント
+    document.addEventListener("click", function(event) {
+        // ランダムに画像を選択
+        const randomImage = images[Math.floor(Math.random() * images.length)];
+
+        // 画像要素を作成
+        const imgElement = document.createElement("img");
+        imgElement.src = randomImage;
+        imgElement.classList.add("random-image");
+
+        // クリック位置に画像を配置
+        imgElement.style.left = event.pageX + "px";
+        imgElement.style.top = event.pageY + "px";
+
+        // 画像をページに追加
+        document.body.appendChild(imgElement);
+
+        // サウンドが有効な場合のみ再生（重複再生可能）
+        if (soundEnabled) {
+            const clickAudio = new Audio("moukona.mp3");
+            clickAudio.play();
+        }
+    });
+
+    // プルダウンメニューの背景色変更処理
+    const colorSelector = document.getElementById('backgroundColorSelector');
+    colorSelector.addEventListener('change', () => {
+        const selectedColor = colorSelector.value;
+        document.body.style.backgroundColor = selectedColor;
+    });
+</script>
+
+</body>
+</html>
